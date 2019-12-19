@@ -1,0 +1,7 @@
+.bl-header {padding:15px 0; background-color:transparent; margin-bottom:40px;}
+.bl-header.scrolled {background-color:rgba(44, 50, 64, 0.95); padding:20px 0px;}
+.bl-header .link {border-right:1px solid rgba(255, 255, 255, 0.15); padding:8px 0; line-height:1;}
+.bl-header .link, .bl-header .logo {-webkit-transition-property:opacity; -webkit-transition-duration:0.5s; -webkit-transition-timing-function:ease;}
+.bl-header small {display:block; font-size:9px; color:#80848c;}
+.bl-header a {color:#beaa8c;}
+.bl-header .user-info {font-size:12px;}

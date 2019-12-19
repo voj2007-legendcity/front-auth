@@ -1,0 +1,41 @@
+{
+  "en": {
+    "translation": {
+      "LANG": "RU",
+      "AUTH": "Auth",
+      "REGISTRATION": "Registration",
+      "LOGOUT": "Logout",
+      "EMAIL": "Email",
+      "PASSWORD": "Password",
+      "CONFIRM_PASSWORD": "Confirm password",
+      "ENTER": "Enter",
+      "SEND": "Send",
+      "GREETING": "Hello <0>{{email}}</0>",
+      "MENU": {
+        "HOME": "Home",
+        "CONTACTS": "Contacts",
+        "PROFILE": "Account",
+        "LOGIN": "Login",
+        "REGISTRATION": "Register",
+        "AUTHORIZATION": "Login",
+        "GOHOME": "Go home",
+        "POSTS": "Posts"
+      },
+      "FORM": {
+        "SUCCESS": "The form was submitted successfully!",
+        "ERROR": "The form contains an error. Please check the form and try again."
+      },
+      "PAGE": {
+        "HOME": "Homepage Content.",
+        "CONTACTS": "Contact page content."
+      },
+      "ERROR": {
+        "POPULATED": "Field can not be empty.",
+        "EMAIL": "Email does not correct.",
+        "MAX": "Invalid number of characters.",
+        "MIN": "Invalid number of characters.",
+        "COMPARE": "Passwords do not match."
+      }
+    }
+  }
+}
