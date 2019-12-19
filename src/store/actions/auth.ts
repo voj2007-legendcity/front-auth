@@ -45,8 +45,7 @@ export const onAutoLoginUser = () => {
         }
       `,
       variables: {
-        id: userId,
-        locale: i18n.language
+        id: userId
       }
     };
 
@@ -61,7 +60,12 @@ export const onAutoLoginUser = () => {
     setTimeout(() => { dispatch(logoutUser()) }, remainingMilliseconds);
 
     try{
-      const res: AxiosResponse<any> = await Axios.post('/graphql', requestBody);
+      const res: AxiosResponse<any> = await Axios.post('/graphql', requestBody, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+          'Accept-Language': i18n.language
+        }
+      });
       
       if(res){
         const user: User = res.data.data.readUser;
@@ -92,13 +96,16 @@ export const onLoginUser = (values: IValues) => {
       `,
       variables: {
         email: values.email,
-        password: values.password,
-        locale: i18n.language
+        password: values.password
       }
     };
 
     try{
-      const res: AxiosResponse<any> = await Axios.post('/graphql', requestBody);
+      const res: AxiosResponse<any> = await Axios.post('/graphql', requestBody, {
+        headers: {
+          'Accept-Language': i18n.language
+        }
+      });
   
       if(res){
         const authUser: Auth = res.data.data.login;

@@ -47,13 +47,16 @@ export const onSignupUser = (values: IValues) => {
       `,
       variables: {
         email: values.email,
-        password: values.password,
-        locale: i18n.language
+        password: values.password
       }
     };
 
     try{
-      const res: AxiosResponse<any> = await Axios.post('/graphql', requestBody);
+      const res: AxiosResponse<any> = await Axios.post('/graphql', requestBody, {
+        headers: {
+          'Accept-Language': i18n.language
+        }
+      });
   
       if(res){
         return true;
@@ -81,12 +84,15 @@ export const onReadUser = (id: string) => {
       `,
       variables: {
         id: id,
-        locale: i18n.language
       }
     };
 
     try{
-      const res: AxiosResponse<any> = await Axios.post('/graphql', requestBody);
+      const res: AxiosResponse<any> = await Axios.post('/graphql', requestBody, {
+        headers: {
+          'Accept-Language': i18n.language
+        }
+      });
   
       if(res){
         const user: User = res.data.data.readUser;
