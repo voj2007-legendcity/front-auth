@@ -3,83 +3,118 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { Link } from 'react-router-dom';
+import { Formik, Form, Field, ErrorMessage, FieldInputProps, FormikProps } from 'formik';
+import * as Yup from "yup";
+import { Trans, Translation } from 'react-i18next';
 // hoc
 import WithBlockWrapper from '../../../hoc/WithBlockWrapper';
-// form
-import { required, isEmail, minLength } from "../../../core/Validation";
-import { Form, IValues } from "../../../core/Form";
-import { Field, IFields } from "../../../core/Field";
 // store
 import { AppActions } from '../../../store/types';
 import { onLoginUser } from '../../../store/actions/auth';
 // styles
 import './Auth.css';
-// i18
-import { Trans, Translation } from 'react-i18next';
+// ui
+import Button from '../../ui/button/Button';
+// context
+import ErrorContext from '../../../context/error';
 
+interface FormValues {
+  email: string;
+  password: string;
+}
 interface ILoginProps {}
 interface ILoginState {
-  fields: IFields
+  serverErrorMessage: string;
 }
 
 type Props = ILoginProps & IMapDispatchToProps;
 
 class Login extends Component<Props, ILoginState> {
+  static contextType = ErrorContext;
 
   constructor(props: Props) {
     super(props);
-    
     this.state = {
-      fields: {
-        email: {
-          id: "email",
-          placeholder: "EMAIL",
-          validation: [
-            { rule: required }, 
-            { rule: isEmail }
-          ]
-        },
-        password: {
-          id: "password",
-          placeholder: "PASSWORD",
-          editor: "password",
-          validation: [
-            { rule: required }, 
-            { rule: minLength, args: { length: 6 } }
-          ]
-        }
-      }
+      serverErrorMessage: ''
     };
   }
 
+  componentDidUpdate(){
+    if(this.context.error){
+      this.setState({ serverErrorMessage: this.context.message });
+    }
+  }
+
+  schema(){
+    return Yup.object().shape({
+      email: Yup.string()
+        .email(() => <Translation>{ (t) => t('ERROR.EMAIL') }</Translation>)
+        .required(() => <Translation>{ (t) => t('ERROR.POPULATED') }</Translation>),
+      password: Yup.string()
+        .min(6, () => <Translation>{ (t) => t('ERROR.MIN') }</Translation>)
+        .required(() => <Translation>{ (t) => t('ERROR.POPULATED') }</Translation>),
+    });
+  }
+
+  handleChange = (e: React.FormEvent<HTMLInputElement>, form: FormikProps<any>, field: FieldInputProps<any>) => {
+    const target: HTMLInputElement = e.target as HTMLInputElement;
+    form.setFieldValue(field.name, target.value);
+    
+    if(this.state.serverErrorMessage){
+      this.setState({ serverErrorMessage: '' });
+    }
+  }
+
   render() {
+    const initialValues: FormValues = { email: '', password: '' };
     return (
-      <Translation>
-        {
-          (t) => (
-          <div className="col-12">
-            <div className="form-container mx-auto">
-            <h5 className="mb-4 text-center"><Trans i18nKey="AUTH" /></h5>
-            <Form
-              submit={this.props.onLoginUser}
-              btnText="ENTER"
-              fields={this.state.fields}>
-              <React.Fragment>
-                <Field {...this.state.fields.email} />
-                <Field {...this.state.fields.password} />
-              </React.Fragment>
+      <div className="col-12">
+        <div className="form-container mx-auto">
+        <h5 className="mb-4 text-center"><Trans i18nKey="AUTH" /></h5>
+        <Formik
+          initialValues={ initialValues }
+          validationSchema={ this.schema() }
+          onSubmit={async (values): Promise<void> => {
+            await this.props.onLoginUser(values);
+          }}
+        >
+          {({ isSubmitting, touched, errors }) => (
+            <Form translate={null}>
+              <div className="form-group">
+                <Field name="email">
+                  {({ field, form }: {field: FieldInputProps<any>, form: FormikProps<any>}) => (
+                    <input {...field} type="email" className={`form-control ${touched.email && errors.email ? "is-invalid" : ""}`} onChange={(e) => this.handleChange(e, form, field)} />
+                  )}
+                </Field>
+                <ErrorMessage name="email" component="div" className="error" />
+              </div>
+              <div className="form-group">
+                <Field name="password">
+                  {({ field, form }: {field: FieldInputProps<any>, form: FormikProps<any>}) => (
+                    <input {...field} type="password" className={`form-control ${touched.password && errors.password ? "is-invalid" : ""}`} onChange={(e) => this.handleChange(e, form, field)} />
+                  )}
+                </Field>
+                <ErrorMessage name="password" component="div" className="error" />
+              </div>
+              <div className="form-group">
+                <Button type="submit" btnClass="btn btn-dark text-white w-100" disabled={isSubmitting}>
+                  {isSubmitting ? <Trans i18nKey="SENDING" /> : <Trans i18nKey="ENTER" />}
+                </Button>
+              </div>
+              {this.state.serverErrorMessage && (
+                <div className="alert alert-danger" role="alert">{this.state.serverErrorMessage}</div>
+              )}
             </Form>
-            <Link to='/signup'><Trans i18nKey="MENU.REGISTRATION" /></Link>
-            </div>
-          </div>
-          )
-        }
-      </Translation>
+          )}
+        </Formik>
+        <Link to='/signup'><Trans i18nKey="MENU.REGISTRATION" /></Link>
+        </div>
+      </div>
     );
   }
 }
 interface IMapDispatchToProps{
-  onLoginUser: (values: IValues) => void;
+  onLoginUser: (values: FormValues) => void;
 }
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>, ownpProps: ILoginProps): IMapDispatchToProps => ({

@@ -1,5 +1,13 @@
-import { IValues, IErrors } from "./Form";
+// import { IValues, IErrors } from "./Form";
 import { ErrorDataType } from "../context/error";
+
+export interface IValues {
+  [key: string]: any;
+}
+
+export interface IErrors {
+  [key: string]: string[];
+}
 
 export interface IValidation {
   rule: (values: IValues, fieldName: string, args?: any) => string;
@@ -13,6 +21,13 @@ export const required = (values: IValues, fieldName: string): string =>
     ? "ERROR.POPULATED"
     : "";
 
+export const requiredSecond = (values: IValues, fieldName: string): boolean => 
+  values[fieldName] === undefined ||
+  values[fieldName] === null ||
+  values[fieldName] === ""
+    ? false
+    : true;
+
 export const isEmail = (values: IValues, fieldName: string): string =>
   values[fieldName] &&
   values[fieldName].search(
@@ -20,6 +35,14 @@ export const isEmail = (values: IValues, fieldName: string): string =>
   )
     ? "ERROR.EMAIL"
     : "";
+
+export const isEmailSecond = (values: IValues, fieldName: string): boolean =>
+  values[fieldName] &&
+  values[fieldName].search(
+    /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+  )
+    ? false
+    : true;
 
 export const maxLength = (
   values: IValues,
@@ -38,6 +61,15 @@ export const minLength = (
   values[fieldName] && values[fieldName].length < args.length
     ? "ERROR.MIN"
     : "";
+
+export const minLengthSecond = (
+  values: IValues,
+  fieldName: string,
+  args: any
+): boolean =>
+  values[fieldName] && values[fieldName].length < args.length
+    ? false
+    : true;
 
 export const compare = (
   values: IValues,

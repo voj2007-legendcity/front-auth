@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Translation } from 'react-i18next';
 
 interface IBlockWrapperProps {}
 interface IBlockWrapperState {}
@@ -9,13 +10,19 @@ const WithBlockWrapper = (WrappedComponent: any, blockClass: string) => {
   return class extends Component<Props, IBlockWrapperState> {
     render () {
       return (
-        <div className={blockClass}>
-          <div className="container">
-            <div className="row">
-              <WrappedComponent {...this.props} />
+        <Translation>
+        {
+          (t) => (
+            <div className={blockClass}>
+              <div className="container">
+                <div className="row">
+                  <WrappedComponent {...this.props} />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+            )
+          }
+        </Translation>
       );
     }
   }

@@ -9,6 +9,7 @@
       "PASSWORD": "Пароль",
       "CONFIRM_PASSWORD": "Подтвердите пароль",
       "ENTER": "Войти",
+      "SENDING": "Отправка...",
       "SEND": "Отправить",
       "GREETING": "Здравствуйте <0>{{email}}</0>",
       "MENU": {

@@ -9,6 +9,7 @@
       "PASSWORD": "Password",
       "CONFIRM_PASSWORD": "Confirm password",
       "ENTER": "Enter",
+      "SENDING": "Sending...",
       "SEND": "Send",
       "GREETING": "Hello <0>{{email}}</0>",
       "MENU": {
